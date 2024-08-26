@@ -1,7 +1,9 @@
 # config file
 import json
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
 class Config:
     """Config class for GPT Researcher."""
@@ -53,6 +55,9 @@ class Config:
 
     def parse_retrievers(self, retriever_str: str):
         """Parse the retriever string into a list of retrievers and validate them."""
+
+        retriever_str="duckduckgo,arxiv,semantic_scholar"
+
         VALID_RETRIEVERS = [
             "arxiv",
             "bing",
