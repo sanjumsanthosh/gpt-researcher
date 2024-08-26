@@ -10,6 +10,7 @@ from gpt_researcher.document import DocumentLoader, LangChainDocumentLoader
 from gpt_researcher.master.actions import *
 from gpt_researcher.memory import Memory
 from gpt_researcher.utils.enum import ReportSource, ReportType, Tone
+from gpt_researcher.utils.url_keeper import CLEAR_URL, Add_URL
 
 
 class GPTResearcher:
@@ -105,6 +106,9 @@ class GPTResearcher:
                 f"🔎 Starting the research task for '{self.query}'...",
                 self.websocket,
             )
+
+        # clean url
+        CLEAR_URL()
 
         # Generate Agent
         if not (self.agent and self.role):
@@ -333,6 +337,8 @@ class GPTResearcher:
                         url,
                     )
 
+        Add_URL(new_urls)
+
         return new_urls
 
     async def __scrape_data_by_query(self, sub_query):
@@ -349,17 +355,23 @@ class GPTResearcher:
 
         # Iterate through all retrievers
         for retriever_class in self.retrievers:
-            # Instantiate the retriever with the sub-query
-            retriever = retriever_class(sub_query)
-
-            # Perform the search using the current retriever
-            search_results = await asyncio.to_thread(
-                retriever.search, max_results=self.cfg.max_search_results_per_query
-            )
-
-            # Collect new URLs from search results
-            search_urls = [url.get("href") for url in search_results]
-            new_search_urls.extend(search_urls)
+            try:
+                # Instantiate the retriever with the sub-query
+                retriever = retriever_class(sub_query)
+        
+                # Perform the search using the current retriever
+                search_results = await asyncio.to_thread(
+                    retriever.search, max_results=self.cfg.max_search_results_per_query
+                )
+        
+                # Collect new URLs from search results
+                search_urls = [url.get("href") for url in search_results]
+                new_search_urls.extend(search_urls)
+            except Exception as e:
+                # Log the error if necessary
+                print(f"Error with retriever {retriever_class}: {e}")
+                # Skip to the next retriever
+                continue
 
         # Get unique URLs
         new_search_urls = await self.__get_new_urls(new_search_urls)

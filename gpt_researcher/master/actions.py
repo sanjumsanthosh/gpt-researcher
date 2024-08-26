@@ -437,7 +437,7 @@ async def generate_report(
                 {"role": "user", "content": content},
             ],
             temperature=0,
-            llm_provider=cfg.llm_provider,
+            llm_provider="google_genai",
             stream=True,
             websocket=websocket,
             max_tokens=cfg.smart_token_limit,

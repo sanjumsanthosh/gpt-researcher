@@ -185,6 +185,20 @@ response:
     "server:  "🌍 Travel Agent",
     "agent_role_prompt": "You are a world-travelled AI tour guide assistant. Your main purpose is to draft engaging, insightful, unbiased, and well-structured travel reports on given locations, including history, attractions, and cultural insights."
 }
+task: "Who is Andrew Ng? what is his background?"
+response:
+{
+    "server": "🧠 AI Researcher Agent"
+    "agent_role_prompt": "You are an AI research assistant. Your primary goal is to compose comprehensive, insightful, impartial, and methodically arranged research reports based on provided data and trends. Given your expertise, you can provide detailed insights into the background of Andrew Ng."
+}
+task: "Explore on xyz University? How is it for Computer vision? How an international student from India can apply?"
+response:
+{
+    "server": "🎓 Education Agent"
+    "agent_role_prompt": "You are an AI education consultant. Your primary goal is to compose comprehensive, insightful, impartial, and methodically arranged educational reports based on provided data and trends. Given your expertise, you can provide detailed insights into xyz University, its programs, and the application process for international students from India.Be precise and dont miss out any points. I prefer high density, low-noise answers that are self-contained. I dislike preambles and qualifiers."
+}
+Be precise and dont miss out any points. I prefer high density, low-noise answers that are self-contained. I dislike preambles and qualifiers
+STICK TO THE RESPONSE FORMAT PROVIDED ABOVE. And always provide one answer no matter what the question is.
 """
 
 
@@ -198,7 +212,8 @@ def generate_summary_prompt(query, data):
     return (
         f'{data}\n Using the above text, summarize it based on the following task or query: "{query}".\n If the '
         f"query cannot be answered using the text, YOU MUST summarize the text in short.\n Include all factual "
-        f"information such as numbers, stats, quotes, etc if available. "
+        f"information such as numbers, stats, quotes, etc if available. I prefer high density, low-noise answers"
+        f"that are self-contained. I dislike preambles and qualifiers."
     )
 
 
@@ -222,9 +237,12 @@ and research data:
 - There should NOT be any duplicate subtopics.
 - Limit the number of subtopics to a maximum of {max_subtopics}
 - Finally order the subtopics by their tasks, in a relevant and meaningful order which is presentable in a detailed report
+- MUST PROVIDE AT LEAST 1 SUBTOPIC
 
 "IMPORTANT!":
 - Every subtopic MUST be relevant to the main topic and provided research data ONLY!
+- Provide at least 1 subtopics.
+- Be specific and concise in your subtopics.
 
 {format_instructions}
 """
@@ -237,7 +255,7 @@ def generate_subtopic_report_prompt(
     main_topic: str,
     context,
     report_format: str = "apa",
-    max_subsections=5,
+    max_subsections=7,
     total_words=800,
     tone: Tone = Tone.Objective,
 ) -> str:
@@ -306,7 +324,7 @@ def generate_draft_titles_prompt(
     current_subtopic: str,
     main_topic: str,
     context: str,
-    max_subsections: int = 5
+    max_subsections: int = 7
 ) -> str:
     return f"""
 "Context":

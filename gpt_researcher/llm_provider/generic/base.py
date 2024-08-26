@@ -40,7 +40,10 @@ class GenericLLMProvider:
             _check_pkg("langchain_google_genai")
             from langchain_google_genai import ChatGoogleGenerativeAI
 
-            llm = ChatGoogleGenerativeAI(**kwargs)
+            if "model" in kwargs:
+                print(kwargs["model"])
+                kwargs.pop("model")
+            llm = ChatGoogleGenerativeAI(**kwargs, model="gemini-1.5-flash")
         elif provider == "fireworks":
             _check_pkg("langchain_fireworks")
             from langchain_fireworks import ChatFireworks

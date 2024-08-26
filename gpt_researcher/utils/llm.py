@@ -1,6 +1,7 @@
 # libraries
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 from typing import Optional, Any, Dict
@@ -56,11 +57,21 @@ async def create_chat_completion(
     provider = get_llm(llm_provider, model=model, temperature=temperature, max_tokens=max_tokens, **(llm_kwargs or {}))
 
     response = ""
+
+    print(f"\n🤖 Calling {llm_provider}...\n sleeping for 1 second\n")
+    await asyncio.sleep(1)
+
     # create response
     for _ in range(10):  # maximum of 10 attempts
         response = await provider.get_chat_response(
             messages, stream, websocket
         )
+
+        await asyncio.sleep(1)
+
+        if response:
+            print(f"{Fore.GREEN}{response}{Style.RESET_ALL}")
+
 
         if cost_callback:
             llm_costs = estimate_llm_cost(str(messages), response)
@@ -87,7 +98,7 @@ async def construct_subtopics(task: str, data: str, config, subtopics: list = []
 
         temperature = config.temperature
         # temperature = 0 # Note: temperature throughout the code base is currently set to Zero
-        provider = get_llm(config.llm_provider, model=config.smart_llm_model, temperature=temperature, max_tokens=config.smart_token_limit, **config.llm_kwargs)
+        provider = get_llm("google_genai", model=config.smart_llm_model, temperature=temperature, max_tokens=config.smart_token_limit, **config.llm_kwargs)
         model = provider.llm
 
 
