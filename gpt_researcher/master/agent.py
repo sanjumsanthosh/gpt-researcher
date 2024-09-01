@@ -10,7 +10,7 @@ from gpt_researcher.document import DocumentLoader, LangChainDocumentLoader
 from gpt_researcher.master.actions import *
 from gpt_researcher.memory import Memory
 from gpt_researcher.utils.enum import ReportSource, ReportType, Tone
-from gpt_researcher.utils.url_keeper import CLEAR_URL, Add_URL
+from gpt_researcher.utils.url_keeper import CLEAR_URL, Add_Compressed_Record, Add_URL, Clear_Compressed_Record
 
 
 class GPTResearcher:
@@ -113,6 +113,7 @@ class GPTResearcher:
 
         # clean url
         CLEAR_URL()
+        Clear_Compressed_Record()
 
         # Generate Agent
         if not (self.agent and self.role):
@@ -363,6 +364,8 @@ class GPTResearcher:
             scraped_data = await self.__scrape_data_by_query(sub_query)
 
         content = await self.__get_similar_content_by_query(sub_query, scraped_data)
+
+        Add_Compressed_Record(content)
 
         if content and self.verbose:
             await stream_output(

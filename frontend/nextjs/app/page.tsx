@@ -43,7 +43,7 @@ export default function Home() {
     }
   }, [orderedData]);
 
-  const startResearch = (chatBoxSettings) => {
+  const startResearch = (chatBoxSettings: { report_source: any; report_type: any; tone: any; task?: any; }) => {
     const storedConfig = localStorage.getItem('apiVariables');
     const apiVariables = storedConfig ? JSON.parse(storedConfig) : {};
     const headers = {
@@ -308,7 +308,8 @@ export default function Home() {
       } else if (data.type === 'langgraphButton') {
         const uniqueKey = `langgraphButton-${index}`;
         return (
-          <div></div>
+            <div key={uniqueKey}>
+            </div>
           // <div key={uniqueKey} className="flex justify-center py-4">
           //   <a
           //     href={data.link}

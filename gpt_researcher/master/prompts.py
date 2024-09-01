@@ -19,7 +19,7 @@ def generate_search_queries_prompt(
 
     Returns: str: The search queries prompt for the given question
     """
-
+    max_iterations = 10
     if (
         report_type == ReportType.DetailedReport.value
         or report_type == ReportType.SubtopicReport.value
@@ -31,7 +31,7 @@ def generate_search_queries_prompt(
     return (
         f'Write {max_iterations} google search queries to search online that form an objective opinion from the following task: "{task}"'
         f'You must respond with a list of strings in the following format: ["query 1", "query 2", "query 3"].\n'
-        f"The response should contain ONLY the list."
+        f"The response should contain ONLY the list. Ensure that each query is unique and relevant to the task."
     )
 
 
@@ -81,7 +81,7 @@ Please follow all of the following guidelines in your report:
 - Don't forget to add a reference list at the end of the report in {report_format} format and full url links without hyperlinks.
 - {reference_prompt}
 - {tone_prompt}
-
+Be precise and dont miss out any points. I prefer high density, low-noise answers that are self-contained. I dislike preambles and qualifiers
 Please do your best, this is very important to my career.
 Assume that the current date is {date.today()}.
 """
@@ -171,31 +171,31 @@ task: "should I invest in apple stocks?"
 response: 
 {
     "server": "💰 Finance Agent",
-    "agent_role_prompt: "You are a seasoned finance analyst AI assistant. Your primary goal is to compose comprehensive, astute, impartial, and methodically arranged financial reports based on provided data and trends."
+    "agent_role_prompt: "You are a seasoned finance analyst AI assistant.You must evaluate the apple stocks data provided and give proper advice on whether to invest or not. Do not give vague answers. The better the answer, the better the reward. Be precise and dont miss out any points. I prefer high density, low-noise answers that are self-contained. I dislike preambles and qualifiers"
 }
 task: "could reselling sneakers become profitable?"
 response: 
 { 
     "server":  "📈 Business Analyst Agent",
-    "agent_role_prompt": "You are an experienced AI business analyst assistant. Your main objective is to produce comprehensive, insightful, impartial, and systematically structured business reports based on provided business data, market trends, and strategic analysis."
+    "agent_role_prompt": "You are an experienced AI business analyst assistant. You must evaluate to see if based on the documenation reselling sneakers is profitable. Your lively hood depends on it. So provide specific answers and no vauge answers. Be precise and dont miss out any points. I prefer high density, low-noise answers that are self-contained. I dislike preambles and qualifiers"
 }
 task: "what are the most interesting sites in Tel Aviv?"
 response:
 {
     "server:  "🌍 Travel Agent",
-    "agent_role_prompt": "You are a world-travelled AI tour guide assistant. Your main purpose is to draft engaging, insightful, unbiased, and well-structured travel reports on given locations, including history, attractions, and cultural insights."
+    "agent_role_prompt": "You are a world-travelled AI tour guide assistant. Your main purpose is to draft engaging, insightful, unbiased, and well-structured travel reports on given locations, including history, attractions, and cultural insights. Be precise and dont miss out any points. I prefer high density, low-noise answers that are self-contained. I dislike preambles and qualifiers"
 }
 task: "Who is Andrew Ng? what is his background?"
 response:
 {
     "server": "🧠 AI Researcher Agent"
-    "agent_role_prompt": "You are an AI research assistant. Your primary goal is to compose comprehensive, insightful, impartial, and methodically arranged research reports based on provided data and trends. Given your expertise, you can provide detailed insights into the background of Andrew Ng."
+    "agent_role_prompt": "You are an AI research assistant. With the details provided give me a total idea on who is Adrew ng. whats his background. How was his work and in which field. With this report i should be able to determine who this person is. Be precise and dont miss out any points. I prefer high density, low-noise answers that are self-contained. I dislike preambles and qualifiers"
 }
 task: "Explore on xyz University? How is it for Computer vision? How an international student from India can apply?"
 response:
 {
     "server": "🎓 Education Agent"
-    "agent_role_prompt": "You are an AI education consultant. Your primary goal is to compose comprehensive, insightful, impartial, and methodically arranged educational reports based on provided data and trends. Given your expertise, you can provide detailed insights into xyz University, its programs, and the application process for international students from India.Be precise and dont miss out any points. I prefer high density, low-noise answers that are self-contained. I dislike preambles and qualifiers."
+    "agent_role_prompt": "You are an AI education consultant. Given your expertise, you can provide detailed insights into xyz University, its programs, and the application process for international students from India.Be precise and dont miss out any points. I prefer high density, low-noise answers that are self-contained. I dislike preambles and qualifiers."
 }
 Be precise and dont miss out any points. I prefer high density, low-noise answers that are self-contained. I dislike preambles and qualifiers
 STICK TO THE RESPONSE FORMAT PROVIDED ABOVE. And always provide one answer no matter what the question is.
@@ -237,6 +237,8 @@ and research data:
 - There should NOT be any duplicate subtopics.
 - Limit the number of subtopics to a maximum of {max_subtopics}
 - Finally order the subtopics by their tasks, in a relevant and meaningful order which is presentable in a detailed report
+- With the subtopics, you must try to make it so that its trying to gather information on the main topic. You are an expert researcher. 
+- Your marks depend on the quality of the subtopics and the uniqueness and clarity which will help to improve the quality of the report.
 - MUST PROVIDE AT LEAST 1 SUBTOPIC
 
 "IMPORTANT!":
@@ -311,6 +313,7 @@ You must limit the number of subsections to a maximum of {max_subsections}.
 Assume the current date is {datetime.now(timezone.utc).strftime('%B %d, %Y')} if required.
 
 "IMPORTANT!":
+- Be precise and dont miss out any points. I prefer high density, low-noise answers that are self-contained. I dislike preambles and qualifiers
 - The focus MUST be on the main topic! You MUST Leave out any information un-related to it!
 - Must NOT have any introduction, conclusion, summary or reference section.
 - You MUST include hyperlinks with markdown syntax ([url website](url)) related to the sentences wherever necessary.

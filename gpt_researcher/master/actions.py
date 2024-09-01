@@ -110,7 +110,7 @@ def get_retrievers(headers, cfg):
     return [get_retriever(r) or get_default_retriever() for r in retrievers]
 
 
-def get_default_retriever(retriever):
+def get_default_retriever():
     from gpt_researcher.retrievers import TavilySearch
 
     return TavilySearch
